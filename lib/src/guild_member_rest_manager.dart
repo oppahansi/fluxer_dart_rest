@@ -36,4 +36,41 @@ final class GuildMemberRestManager {
     path: '/guilds/$guildId/members/$userId',
     bucketKey: 'DELETE /guilds/:id/members/:id',
   );
+
+  /// Times a member out until [until], or clears an existing timeout when
+  /// [until] is `null`.
+  Future<GuildMember> timeout(
+    Snowflake guildId,
+    Snowflake userId, {
+    required DateTime? until,
+    String? reason,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'PATCH',
+      path: '/guilds/$guildId/members/$userId',
+      bucketKey: 'PATCH /guilds/:id/members/:id',
+      body: {
+        'communication_disabled_until': until?.toIso8601String(),
+        'timeout_reason': ?reason,
+      },
+    );
+    return GuildMember.fromJson(json!);
+  }
+
+  Future<void> addRole(Snowflake guildId, Snowflake userId, Snowflake roleId) =>
+      _client.requestJson(
+        method: 'PUT',
+        path: '/guilds/$guildId/members/$userId/roles/$roleId',
+        bucketKey: 'PUT /guilds/:id/members/:id/roles/:id',
+      );
+
+  Future<void> removeRole(
+    Snowflake guildId,
+    Snowflake userId,
+    Snowflake roleId,
+  ) => _client.requestJson(
+    method: 'DELETE',
+    path: '/guilds/$guildId/members/$userId/roles/$roleId',
+    bucketKey: 'DELETE /guilds/:id/members/:id/roles/:id',
+  );
 }

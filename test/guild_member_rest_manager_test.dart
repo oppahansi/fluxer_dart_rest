@@ -81,5 +81,92 @@ void main() {
       expect(captured.method, 'DELETE');
       expect(captured.path, '/guilds/1/members/3');
     });
+
+    test('timeout PATCHes communication_disabled_until', () async {
+      when(() => transport.send(any())).thenAnswer(
+        (_) async => HttpTransportResponse(
+          statusCode: 200,
+          headers: const {},
+          body: _sampleMemberJson,
+        ),
+      );
+      final until = DateTime.utc(2026, 1, 1);
+
+      await manager.timeout(
+        Snowflake.parse('1'),
+        Snowflake.parse('3'),
+        until: until,
+        reason: 'spamming',
+      );
+
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.method, 'PATCH');
+      expect(captured.path, '/guilds/1/members/3');
+      expect(captured.body, {
+        'communication_disabled_until': until.toIso8601String(),
+        'timeout_reason': 'spamming',
+      });
+    });
+
+    test('timeout with until: null omits timeout_reason when unset', () async {
+      when(() => transport.send(any())).thenAnswer(
+        (_) async => HttpTransportResponse(
+          statusCode: 200,
+          headers: const {},
+          body: _sampleMemberJson,
+        ),
+      );
+
+      await manager.timeout(
+        Snowflake.parse('1'),
+        Snowflake.parse('3'),
+        until: null,
+      );
+
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.body, {'communication_disabled_until': null});
+    });
+
+    test('addRole PUTs to the member role route', () async {
+      when(() => transport.send(any())).thenAnswer(
+        (_) async =>
+            const HttpTransportResponse(statusCode: 204, headers: {}, body: ''),
+      );
+
+      await manager.addRole(
+        Snowflake.parse('1'),
+        Snowflake.parse('3'),
+        Snowflake.parse('9'),
+      );
+
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.method, 'PUT');
+      expect(captured.path, '/guilds/1/members/3/roles/9');
+    });
+
+    test('removeRole DELETEs the member role route', () async {
+      when(() => transport.send(any())).thenAnswer(
+        (_) async =>
+            const HttpTransportResponse(statusCode: 204, headers: {}, body: ''),
+      );
+
+      await manager.removeRole(
+        Snowflake.parse('1'),
+        Snowflake.parse('3'),
+        Snowflake.parse('9'),
+      );
+
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.method, 'DELETE');
+      expect(captured.path, '/guilds/1/members/3/roles/9');
+    });
   });
 }

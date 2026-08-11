@@ -31,4 +31,23 @@ final class GuildRestManager {
     );
     return Channel.fromJson(json!);
   }
+
+  /// Lists up to [limit] recent audit log entries, newest first.
+  Future<List<GuildAuditLogEntry>> getAuditLogs(
+    Snowflake guildId, {
+    int? limit,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: limit == null
+          ? '/guilds/$guildId/audit-logs'
+          : '/guilds/$guildId/audit-logs?limit=$limit',
+      bucketKey: 'GET /guilds/:id/audit-logs',
+    );
+    final entries =
+        (json as Map<String, dynamic>)['audit_log_entries'] as List<dynamic>;
+    return entries
+        .map((e) => GuildAuditLogEntry.fromJson(e as Map<String, dynamic>))
+        .toList(growable: false);
+  }
 }

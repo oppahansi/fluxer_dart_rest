@@ -68,4 +68,36 @@ void main() {
       });
     },
   );
+
+  test(
+    'GuildRestManager.getAuditLogs decodes the entry list, ignoring users/webhooks',
+    () async {
+      final transport = MockHttpTransport();
+      when(() => transport.send(any())).thenAnswer(
+        (_) async => const HttpTransportResponse(
+          statusCode: 200,
+          headers: {},
+          body:
+              '{"audit_log_entries": [{"id": "1", "action_type": 10, "user_id": "2", '
+              '"reason": "spamming"}], "users": [], "webhooks": []}',
+        ),
+      );
+      final manager = GuildRestManager(
+        RestClient(token: 't', transport: transport),
+      );
+
+      final entries = await manager.getAuditLogs(
+        Snowflake.parse('1'),
+        limit: 5,
+      );
+
+      expect(entries, hasLength(1));
+      expect(entries.single.actionType, 10);
+      expect(entries.single.reason, 'spamming');
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.path, '/guilds/1/audit-logs?limit=5');
+    },
+  );
 }
