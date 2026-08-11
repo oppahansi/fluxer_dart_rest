@@ -19,19 +19,21 @@ source, since Fluxer's prose REST docs are still unwritten placeholders.
   guessed capacities. Fluxer doesn't publish per-route limits anywhere;
   the only honest source of truth is the API's own responses.
 - Resource-oriented managers (`GuildRestManager`, `ChannelRestManager`,
-  `MessageRestManager`) mirror Fluxer's own OpenAPI grouping — a
-  Repository-pattern layer returning typed `fluxer_core` models instead of
-  raw JSON.
+  `MessageRestManager`, `GuildMemberRestManager`, `GuildBanRestManager`,
+  `GuildEmojiRestManager`, `GuildStickerRestManager`,
+  `GuildRoleRestManager`, `InviteRestManager`, `WebhookRestManager`) mirror
+  Fluxer's own OpenAPI grouping — a Repository-pattern layer returning
+  typed `fluxer_core` models instead of raw JSON.
 - `MessageBuilder` — Builder pattern for outgoing message payloads.
 
-## What's here (v0.1 — M1 slice)
+## What's here
 
-Enough REST surface for the "hello gateway" vertical slice:
-`GuildRestManager.get`, `ChannelRestManager.get`,
-`MessageRestManager.send`. Broader coverage (roles, members, emojis,
-webhooks, ...) lands in M2, alongside a checkpoint on whether to generate
-this layer from the OpenAPI spec instead of hand-writing it — see the
-roadmap in this ecosystem's planning docs.
+The REST surface `fluxer.dart`'s `Bot` facade is built on: guild, channel,
+message, member, ban, emoji, sticker, role, invite, and webhook resource
+managers, gateway bot-info lookup, and reactive per-route rate limiting.
+Hand-written rather than generated from the OpenAPI spec — evaluated and
+decided against for now, see the roadmap in this ecosystem's planning
+docs for why. Audit log endpoints aren't modeled yet.
 
 ## Part of the fluxer.dart ecosystem
 
