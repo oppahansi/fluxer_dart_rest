@@ -1,0 +1,93 @@
+import 'package:fluxer_core/fluxer_core.dart';
+import 'package:fluxer_rest/fluxer_rest.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:test/test.dart';
+
+class MockHttpTransport extends Mock implements HttpTransport {}
+
+const _sampleBanJson =
+    '{"user": {"id": "3", "username": "baduser", "discriminator": "0", "global_name": null, '
+    '"avatar": null, "avatar_color": null, "bot": false, "system": false}, "reason": "spam", '
+    '"moderator_id": "1", "banned_at": "2026-08-11T12:00:00.000Z", "expires_at": null}';
+
+void main() {
+  setUpAll(() {
+    registerFallbackValue(const HttpTransportRequest(method: 'GET', path: '/'));
+  });
+
+  group('GuildBanRestManager', () {
+    late MockHttpTransport transport;
+    late GuildBanRestManager manager;
+
+    setUp(() {
+      transport = MockHttpTransport();
+      manager = GuildBanRestManager(
+        RestClient(token: 't', transport: transport),
+      );
+    });
+
+    test('list decodes an array of bans', () async {
+      when(() => transport.send(any())).thenAnswer(
+        (_) async => HttpTransportResponse(
+          statusCode: 200,
+          headers: const {},
+          body: '[$_sampleBanJson]',
+        ),
+      );
+
+      final bans = await manager.list(Snowflake.parse('1'));
+
+      expect(bans, hasLength(1));
+      expect(bans.single.reason, 'spam');
+    });
+
+    test('ban sends a PUT with the reason body', () async {
+      when(() => transport.send(any())).thenAnswer(
+        (_) async =>
+            const HttpTransportResponse(statusCode: 204, headers: {}, body: ''),
+      );
+
+      await manager.ban(
+        Snowflake.parse('1'),
+        Snowflake.parse('3'),
+        reason: 'spam',
+      );
+
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.method, 'PUT');
+      expect(captured.path, '/guilds/1/bans/3');
+      expect(captured.body, {'reason': 'spam'});
+    });
+
+    test('ban without a reason sends an empty body', () async {
+      when(() => transport.send(any())).thenAnswer(
+        (_) async =>
+            const HttpTransportResponse(statusCode: 204, headers: {}, body: ''),
+      );
+
+      await manager.ban(Snowflake.parse('1'), Snowflake.parse('3'));
+
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.body, <String, dynamic>{});
+    });
+
+    test('unban sends a DELETE', () async {
+      when(() => transport.send(any())).thenAnswer(
+        (_) async =>
+            const HttpTransportResponse(statusCode: 204, headers: {}, body: ''),
+      );
+
+      await manager.unban(Snowflake.parse('1'), Snowflake.parse('3'));
+
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.method, 'DELETE');
+      expect(captured.path, '/guilds/1/bans/3');
+    });
+  });
+}

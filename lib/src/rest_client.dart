@@ -36,15 +36,19 @@ final class RestClient {
 
   final _rateLimits = RateLimitBucketManager();
 
-  /// Sends a request and returns the decoded JSON body, or `null` for an
-  /// empty response (e.g. `204 No Content`).
+  /// Sends a request and returns the decoded JSON body — a `Map` for
+  /// single-resource endpoints, a `List` for list endpoints, or `null`
+  /// for an empty response (e.g. `204 No Content`). Callers know which
+  /// shape to expect from the route they called, same as any other
+  /// untyped JSON client; the resource managers are what give call sites
+  /// an actually-typed result.
   ///
   /// [bucketKey] identifies the rate-limit bucket this route belongs to
   /// — defaults to `"$method $path"`, which is wrong for routes that
   /// share a bucket (a real limitation until Fluxer's actual bucket IDs
   /// are threaded through in M2), but never wrong in the unsafe
   /// direction: worst case it's more conservative than necessary.
-  Future<Map<String, dynamic>?> requestJson({
+  Future<dynamic> requestJson({
     required String method,
     required String path,
     String? bucketKey,
@@ -105,7 +109,7 @@ final class RestClient {
       }
 
       if (response.statusCode >= 400) {
-        final decoded = _tryDecode(response.body);
+        final decoded = _tryDecodeErrorBody(response.body);
         throw FluxerApiException(
           (decoded?['message'] as String?) ?? 'Request to $method $path failed',
           statusCode: response.statusCode,
@@ -117,7 +121,16 @@ final class RestClient {
     }
   }
 
-  Map<String, dynamic>? _tryDecode(String body) {
+  dynamic _tryDecode(String body) {
+    if (body.isEmpty) return null;
+    return jsonDecode(body);
+  }
+
+  /// Fluxer's error responses are always a JSON object
+  /// (`{code, message, ...}`), regardless of what the successful response
+  /// shape for that route would have been — so this, unlike [_tryDecode],
+  /// can safely assume a `Map`.
+  Map<String, dynamic>? _tryDecodeErrorBody(String body) {
     if (body.isEmpty) return null;
     return jsonDecode(body) as Map<String, dynamic>;
   }

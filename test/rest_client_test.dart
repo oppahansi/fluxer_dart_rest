@@ -59,6 +59,24 @@ void main() {
       },
     );
 
+    test(
+      'decodes a JSON array body (list endpoints) without forcing it into a Map',
+      () async {
+        when(() => transport.send(any())).thenAnswer(
+          (_) async => _jsonResponse(200, '[{"id": "1"}, {"id": "2"}]'),
+        );
+
+        final json = await client.requestJson(
+          method: 'GET',
+          path: '/guilds/1/members',
+        );
+        expect(json, [
+          {'id': '1'},
+          {'id': '2'},
+        ]);
+      },
+    );
+
     test('decodes a JSON body on success', () async {
       when(() => transport.send(any())).thenAnswer(
         (_) async => _jsonResponse(200, '{"id": "1", "name": "Test"}'),
