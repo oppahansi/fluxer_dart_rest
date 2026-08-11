@@ -1,0 +1,26 @@
+name: fluxer_rest
+description: >-
+  REST client for Fluxer: an HttpTransport adapter over package:http,
+  reactive rate-limit bucket tracking from Fluxer's own X-RateLimit-*
+  response headers, and resource-oriented managers over fluxer_core models.
+version: 0.1.0
+homepage: https://github.com/oppahansi/fluxer_rest
+repository: https://github.com/oppahansi/fluxer_rest
+# Uses path deps on sibling packages during local development — remove this
+# line once those are published/hosted and this is ready for a real release.
+publish_to: 'none'
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  fluxer_core:
+    path: ../fluxer_core
+  fluxer_utils:
+    path: ../fluxer_utils
+  http: ^1.6.0
+
+dev_dependencies:
+  lints: ^6.1.0
+  mocktail: ^1.0.5
+  test: ^1.31.2
