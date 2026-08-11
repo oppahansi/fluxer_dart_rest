@@ -45,9 +45,9 @@ final class RestClient {
   ///
   /// [bucketKey] identifies the rate-limit bucket this route belongs to
   /// — defaults to `"$method $path"`, which is wrong for routes that
-  /// share a bucket (a real limitation until Fluxer's actual bucket IDs
-  /// are threaded through in M2), but never wrong in the unsafe
-  /// direction: worst case it's more conservative than necessary.
+  /// share a bucket (Fluxer's actual per-route bucket IDs aren't threaded
+  /// through here), but never wrong in the unsafe direction: worst case
+  /// it's more conservative than necessary.
   Future<dynamic> requestJson({
     required String method,
     required String path,

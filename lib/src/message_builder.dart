@@ -1,8 +1,6 @@
 /// Builds the JSON body for an outgoing message. Fluent/chainable
 /// (Builder pattern) so call sites read as a sequence of decisions rather
-/// than one large positional-argument constructor call — more valuable
-/// once embeds/attachments/replies land in M2 than it looks for the
-/// content-only M1 slice.
+/// than one large positional-argument constructor call.
 final class MessageBuilder {
   // Can't use an initializing formal here: the public param name (content)
   // intentionally differs from the private field it seeds, and a private

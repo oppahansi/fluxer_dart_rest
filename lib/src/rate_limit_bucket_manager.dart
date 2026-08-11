@@ -7,11 +7,11 @@ import 'package:fluxer_utils/fluxer_utils.dart';
 /// Fluxer doesn't publish per-route limits anywhere; the API's own
 /// responses are the only honest source of truth.
 ///
-/// Simplification worth revisiting in M2: this replaces a route's bucket
-/// wholesale on every response rather than reconciling against the
-/// existing one, and keys buckets by caller-supplied string rather than
-/// Fluxer's actual per-route `X-RateLimit-Bucket` ID (which can group
-/// multiple paths under one shared limit).
+/// Known limitations: replaces a route's bucket wholesale on every
+/// response rather than reconciling against the existing one, and keys
+/// buckets by caller-supplied string rather than Fluxer's actual
+/// per-route `X-RateLimit-Bucket` ID (which can group multiple paths
+/// under one shared limit).
 final class RateLimitBucketManager {
   final _buckets = <String, TokenBucket>{};
 
