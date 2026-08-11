@@ -33,4 +33,39 @@ void main() {
     expect(captured.path, '/guilds/1');
     expect(captured.method, 'GET');
   });
+
+  test(
+    'GuildRestManager.createChannel posts the built payload and decodes the response',
+    () async {
+      final transport = MockHttpTransport();
+      when(() => transport.send(any())).thenAnswer(
+        (_) async => const HttpTransportResponse(
+          statusCode: 200,
+          headers: {},
+          body:
+              '{"id": "3", "type": 0, "name": "general", "guild_id": "1", "topic": null, '
+              '"position": 0, "parent_id": null, "last_message_id": null, "nsfw": false, "rate_limit_per_user": 0}',
+        ),
+      );
+      final manager = GuildRestManager(
+        RestClient(token: 't', transport: transport),
+      );
+
+      final channel = await manager.createChannel(
+        Snowflake.parse('1'),
+        ChannelCreateBuilder(name: 'general', type: ChannelType.guildText),
+      );
+
+      expect((channel as GuildTextChannel).name, 'general');
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.method, 'POST');
+      expect(captured.path, '/guilds/1/channels');
+      expect(captured.body, {
+        'name': 'general',
+        'type': ChannelType.guildText.value,
+      });
+    },
+  );
 }

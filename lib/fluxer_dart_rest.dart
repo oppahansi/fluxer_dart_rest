@@ -3,7 +3,9 @@
 /// over fluxer_dart_core models.
 library;
 
+export 'src/channel_create_builder.dart';
 export 'src/channel_rest_manager.dart';
+export 'src/channel_update_builder.dart';
 export 'src/embed_builder.dart';
 export 'src/gateway_rest_manager.dart';
 export 'src/guild_ban_rest_manager.dart';

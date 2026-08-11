@@ -1,7 +1,7 @@
 import 'package:fluxer_dart_core/fluxer_dart_core.dart';
 
-/// Builds an [Embed]. Fluent/chainable (Builder pattern), matching
-/// [MessageBuilder]'s own shape — this is the Dart-idiomatic way to
+/// Builds an [Embed]. Fluent/chainable (Builder pattern), matching this
+/// package's other builders — this is the Dart-idiomatic way to
 /// construct a deeply nested request object one decision at a time, not
 /// a port of any particular other ecosystem's embed builder.
 final class EmbedBuilder {
