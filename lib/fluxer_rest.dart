@@ -4,6 +4,7 @@
 library;
 
 export 'src/channel_rest_manager.dart';
+export 'src/gateway_rest_manager.dart';
 export 'src/guild_rest_manager.dart';
 export 'src/http_transport.dart';
 export 'src/message_builder.dart';
