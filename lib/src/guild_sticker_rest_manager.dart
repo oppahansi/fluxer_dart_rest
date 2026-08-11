@@ -20,4 +20,47 @@ final class GuildStickerRestManager {
         .map((s) => GuildSticker.fromJson(s as Map<String, dynamic>))
         .toList(growable: false);
   }
+
+  /// [image] is a data URI (`data:image/png;base64,...`), matching what
+  /// `GuildStickerCreateRequest.image` expects on the wire.
+  Future<GuildSticker> create(
+    Snowflake guildId, {
+    required String name,
+    required String image,
+    String? description,
+    String? tags,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'POST',
+      path: '/guilds/$guildId/stickers',
+      bucketKey: 'POST /guilds/:id/stickers',
+      body: {
+        'name': name,
+        'image': image,
+        'description': ?description,
+        'tags': ?tags,
+      },
+    );
+    return GuildSticker.fromJson(json!);
+  }
+
+  Future<GuildSticker> clone(
+    Snowflake guildId,
+    Snowflake sourceStickerId,
+  ) async {
+    final json = await _client.requestJson(
+      method: 'POST',
+      path: '/guilds/$guildId/stickers/clone',
+      bucketKey: 'POST /guilds/:id/stickers/clone',
+      body: {'source_sticker_id': sourceStickerId.toJson()},
+    );
+    return GuildSticker.fromJson(json!);
+  }
+
+  Future<void> delete(Snowflake guildId, Snowflake stickerId) =>
+      _client.requestJson(
+        method: 'DELETE',
+        path: '/guilds/$guildId/stickers/$stickerId',
+        bucketKey: 'DELETE /guilds/:id/stickers/:id',
+      );
 }
