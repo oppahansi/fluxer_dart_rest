@@ -4,6 +4,7 @@
 library;
 
 export 'src/channel_rest_manager.dart';
+export 'src/embed_builder.dart';
 export 'src/gateway_rest_manager.dart';
 export 'src/guild_ban_rest_manager.dart';
 export 'src/guild_emoji_rest_manager.dart';
