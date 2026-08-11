@@ -11,10 +11,22 @@ final class GuildMemberRestManager {
 
   final RestClient _client;
 
-  Future<List<GuildMember>> list(Snowflake guildId) async {
+  /// [limit] must be sent explicitly — confirmed against the live
+  /// OpenAPI spec that Fluxer defaults it to **1** if omitted, not "all"
+  /// or some larger page size like every other list endpoint in this
+  /// SDK. [after] pages through guilds with more than [limit] members
+  /// (max 1000 per call), same cursor convention as everywhere else on
+  /// the platform.
+  Future<List<GuildMember>> list(
+    Snowflake guildId, {
+    int limit = 100,
+    Snowflake? after,
+  }) async {
     final json = await _client.requestJson(
       method: 'GET',
-      path: '/guilds/$guildId/members',
+      path:
+          '/guilds/$guildId/members?limit=$limit'
+          '${after == null ? '' : '&after=$after'}',
       bucketKey: 'GET /guilds/:id/members',
     );
     return (json as List<dynamic>)

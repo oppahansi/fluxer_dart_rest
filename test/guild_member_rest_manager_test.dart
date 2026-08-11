@@ -27,7 +27,29 @@ void main() {
       );
     });
 
-    test('list decodes an array of members', () async {
+    test(
+      'list sends the default limit, since the server defaults to 1',
+      () async {
+        when(() => transport.send(any())).thenAnswer(
+          (_) async => HttpTransportResponse(
+            statusCode: 200,
+            headers: const {},
+            body: '[$_sampleMemberJson]',
+          ),
+        );
+
+        final members = await manager.list(Snowflake.parse('1'));
+
+        expect(members, hasLength(1));
+        expect(members.single.user.username, 'oppa');
+        final captured =
+            verify(() => transport.send(captureAny())).captured.single
+                as HttpTransportRequest;
+        expect(captured.path, '/guilds/1/members?limit=100');
+      },
+    );
+
+    test('list forwards an explicit limit and after cursor', () async {
       when(() => transport.send(any())).thenAnswer(
         (_) async => HttpTransportResponse(
           statusCode: 200,
@@ -36,14 +58,16 @@ void main() {
         ),
       );
 
-      final members = await manager.list(Snowflake.parse('1'));
+      await manager.list(
+        Snowflake.parse('1'),
+        limit: 5,
+        after: Snowflake.parse('9'),
+      );
 
-      expect(members, hasLength(1));
-      expect(members.single.user.username, 'oppa');
       final captured =
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
-      expect(captured.path, '/guilds/1/members');
+      expect(captured.path, '/guilds/1/members?limit=5&after=9');
     });
 
     test('get fetches a single member', () async {
