@@ -73,6 +73,72 @@ void main() {
     },
   );
 
+  test(
+    'MessageRestManager.edit PATCHes the built payload and decodes the response',
+    () async {
+      final transport = MockHttpTransport();
+      when(() => transport.send(any())).thenAnswer(
+        (_) async => const HttpTransportResponse(
+          statusCode: 200,
+          headers: {},
+          body:
+              '{"id": "1", "channel_id": "2", "author": {"id": "3", "username": "bot", "discriminator": "0", '
+              '"global_name": null, "avatar": null, "avatar_color": null, "bot": true, "system": false}, '
+              '"type": 0, "flags": 0, "content": "page 2/3", "timestamp": "2026-08-11T12:00:00.000Z", '
+              '"edited_timestamp": null, "pinned": false, "mention_everyone": false, "tts": false, '
+              '"mentions": [], "mention_roles": []}',
+        ),
+      );
+      final manager = MessageRestManager(
+        RestClient(token: 't', transport: transport),
+      );
+
+      final message = await manager.edit(
+        Snowflake.parse('2'),
+        Snowflake.parse('1'),
+        MessageBuilder(content: 'page 2/3'),
+      );
+
+      expect(message.content, 'page 2/3');
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.method, 'PATCH');
+      expect(captured.path, '/channels/2/messages/1');
+      expect(captured.body, {'content': 'page 2/3'});
+    },
+  );
+
+  test(
+    'MessageRestManager.removeReaction DELETEs the user reaction endpoint',
+    () async {
+      final transport = MockHttpTransport();
+      when(() => transport.send(any())).thenAnswer(
+        (_) async =>
+            const HttpTransportResponse(statusCode: 204, headers: {}, body: ''),
+      );
+      final manager = MessageRestManager(
+        RestClient(token: 't', transport: transport),
+      );
+
+      await manager.removeReaction(
+        Snowflake.parse('2'),
+        Snowflake.parse('5'),
+        '👍',
+        Snowflake.parse('9'),
+      );
+
+      final captured =
+          verify(() => transport.send(captureAny())).captured.single
+              as HttpTransportRequest;
+      expect(captured.method, 'DELETE');
+      expect(
+        captured.path,
+        '/channels/2/messages/5/reactions/${Uri.encodeComponent('👍')}/9',
+      );
+    },
+  );
+
   test('MessageRestManager.delete sends a DELETE to the message', () async {
     final transport = MockHttpTransport();
     when(() => transport.send(any())).thenAnswer(

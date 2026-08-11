@@ -33,6 +33,20 @@ final class MessageRestManager {
     return Message.fromJson(json!);
   }
 
+  Future<Message> edit(
+    Snowflake channelId,
+    Snowflake messageId,
+    MessageBuilder message,
+  ) async {
+    final json = await _client.requestJson(
+      method: 'PATCH',
+      path: '/channels/$channelId/messages/$messageId',
+      bucketKey: 'PATCH /channels/:id/messages/:id',
+      body: message.toJson(),
+    );
+    return Message.fromJson(json!);
+  }
+
   Future<void> delete(Snowflake channelId, Snowflake messageId) =>
       _client.requestJson(
         method: 'DELETE',
@@ -64,5 +78,20 @@ final class MessageRestManager {
         '/channels/$channelId/messages/$messageId/reactions/'
         '${Uri.encodeComponent(emoji)}/@me',
     bucketKey: 'PUT /channels/:id/messages/:id/reactions/:emoji/@me',
+  );
+
+  /// Removes [userId]'s reaction — requires `manageMessages` unless
+  /// [userId] is the bot itself, in which case it's removing its own.
+  Future<void> removeReaction(
+    Snowflake channelId,
+    Snowflake messageId,
+    String emoji,
+    Snowflake userId,
+  ) => _client.requestJson(
+    method: 'DELETE',
+    path:
+        '/channels/$channelId/messages/$messageId/reactions/'
+        '${Uri.encodeComponent(emoji)}/$userId',
+    bucketKey: 'DELETE /channels/:id/messages/:id/reactions/:emoji/:user',
   );
 }
