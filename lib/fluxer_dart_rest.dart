@@ -21,4 +21,5 @@ export 'src/message_rest_manager.dart';
 export 'src/package_http_transport.dart';
 export 'src/rate_limit_bucket_manager.dart';
 export 'src/rest_client.dart';
+export 'src/webhook_execute_client.dart';
 export 'src/webhook_rest_manager.dart';
