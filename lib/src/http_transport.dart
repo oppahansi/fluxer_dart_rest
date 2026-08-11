@@ -39,7 +39,7 @@ final class HttpTransportResponse {
 /// drive `RestClient` and everything built on it with a mocked transport
 /// instead of live HTTP calls.
 ///
-/// [RestClient]: package:fluxer_rest/src/rest_client.dart
+/// [RestClient]: package:fluxer_dart_rest/src/rest_client.dart
 abstract interface class HttpTransport {
   Future<HttpTransportResponse> send(HttpTransportRequest request);
 }

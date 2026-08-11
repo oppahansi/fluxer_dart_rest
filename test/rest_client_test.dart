@@ -1,6 +1,6 @@
-import 'package:fluxer_core/fluxer_core.dart';
-import 'package:fluxer_rest/fluxer_rest.dart';
-import 'package:fluxer_utils/fluxer_utils.dart';
+import 'package:fluxer_dart_core/fluxer_dart_core.dart';
+import 'package:fluxer_dart_rest/fluxer_dart_rest.dart';
+import 'package:fluxer_dart_utils/fluxer_dart_utils.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 

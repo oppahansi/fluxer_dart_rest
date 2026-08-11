@@ -1,4 +1,4 @@
-import 'package:fluxer_utils/fluxer_utils.dart';
+import 'package:fluxer_dart_utils/fluxer_dart_utils.dart';
 
 /// Tracks a [TokenBucket] per route, populated *reactively* from
 /// Fluxer's `X-RateLimit-Limit` / `X-RateLimit-Remaining` /

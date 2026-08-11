@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:fluxer_core/fluxer_core.dart';
-import 'package:fluxer_utils/fluxer_utils.dart';
+import 'package:fluxer_dart_core/fluxer_dart_core.dart';
+import 'package:fluxer_dart_utils/fluxer_dart_utils.dart';
 
 import 'http_transport.dart';
 import 'package_http_transport.dart';
@@ -14,7 +14,7 @@ final Uri defaultFluxerApiBaseUrl = Uri.parse('https://api.fluxer.app');
 /// Low-level REST client: sends a request through [HttpTransport],
 /// respects known rate-limit buckets, retries `429`/`5xx` responses, and
 /// decodes JSON — everything above this (the resource managers) works in
-/// typed `fluxer_core` models instead of raw maps.
+/// typed `fluxer_dart_core` models instead of raw maps.
 final class RestClient {
   RestClient({
     required this.token,

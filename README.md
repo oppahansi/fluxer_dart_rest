@@ -1,6 +1,6 @@
-# fluxer_rest
+# fluxer_dart_rest
 
-REST client for the [fluxer.dart](https://github.com/oppahansi/fluxer.dart) ecosystem.
+REST client for the [fluxer_dart](https://github.com/oppahansi/fluxer_dart) ecosystem.
 
 Endpoint paths, the `Authorization: Bot <token>` header, and the
 `X-RateLimit-*` response header names were all verified against Fluxer's
@@ -23,28 +23,29 @@ source, since Fluxer's prose REST docs are still unwritten placeholders.
   `GuildEmojiRestManager`, `GuildStickerRestManager`,
   `GuildRoleRestManager`, `InviteRestManager`, `WebhookRestManager`) mirror
   Fluxer's own OpenAPI grouping — a Repository-pattern layer returning
-  typed `fluxer_core` models instead of raw JSON.
+  typed `fluxer_dart_core` models instead of raw JSON.
 - `MessageBuilder` — Builder pattern for outgoing message payloads.
 
 ## What's here
 
-The REST surface `fluxer.dart`'s `Bot` facade is built on: guild, channel,
+The REST surface `fluxer_dart`'s `Bot` facade is built on: guild, channel,
 message, member, ban, emoji, sticker, role, invite, and webhook resource
 managers, gateway bot-info lookup, and reactive per-route rate limiting.
 Hand-written rather than generated from the OpenAPI spec — evaluated and
 decided against for now, see the roadmap in this ecosystem's planning
 docs for why. Audit log endpoints aren't modeled yet.
 
-## Part of the fluxer.dart ecosystem
+## Part of the fluxer_dart ecosystem
 
 | Package | Purpose |
 |---|---|
-| [`fluxer_utils`](https://github.com/oppahansi/fluxer_utils) | generic building blocks |
-| [`fluxer_core`](https://github.com/oppahansi/fluxer_core) | domain models |
-| [`fluxer_rest`](https://github.com/oppahansi/fluxer_rest) | *(this package)* REST client |
-| [`fluxer_gateway`](https://github.com/oppahansi/fluxer_gateway) | WebSocket gateway client |
-| [`fluxer.dart`](https://github.com/oppahansi/fluxer.dart) | main framework — the `Bot` facade |
-| [`fluxer.dart-bot`](https://github.com/oppahansi/fluxer.dart-bot) | example bot |
+| [`fluxer_dart_utils`](https://github.com/oppahansi/fluxer_dart_utils) | generic building blocks |
+| [`fluxer_dart_core`](https://github.com/oppahansi/fluxer_dart_core) | domain models |
+| [`fluxer_dart_rest`](https://github.com/oppahansi/fluxer_dart_rest) | *(this package)* REST client |
+| [`fluxer_dart_gateway`](https://github.com/oppahansi/fluxer_dart_gateway) | WebSocket gateway client |
+| [`fluxer_dart_voice`](https://github.com/oppahansi/fluxer_dart_voice) | voice support |
+| [`fluxer_dart`](https://github.com/oppahansi/fluxer_dart) | main framework — the `Bot` facade |
+| [`fluxer_dart_bot`](https://github.com/oppahansi/fluxer_dart_bot) | example bot |
 
 ## Installation
 
@@ -53,9 +54,9 @@ git dependency:
 
 ```yaml
 dependencies:
-  fluxer_rest:
+  fluxer_dart_rest:
     git:
-      url: https://github.com/oppahansi/fluxer_rest.git
+      url: https://github.com/oppahansi/fluxer_dart_rest.git
 ```
 
 ## License

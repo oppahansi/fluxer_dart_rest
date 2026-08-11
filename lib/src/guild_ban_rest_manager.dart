@@ -1,4 +1,4 @@
-import 'package:fluxer_core/fluxer_core.dart';
+import 'package:fluxer_dart_core/fluxer_dart_core.dart';
 
 import 'rest_client.dart';
 

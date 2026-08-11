@@ -1,6 +1,6 @@
-/// REST client for the fluxer.dart ecosystem: an HttpTransport adapter,
+/// REST client for the fluxer_dart ecosystem: an HttpTransport adapter,
 /// reactive rate-limit bucket tracking, and resource-oriented managers
-/// over fluxer_core models.
+/// over fluxer_dart_core models.
 library;
 
 export 'src/channel_rest_manager.dart';
