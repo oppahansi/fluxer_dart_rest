@@ -35,6 +35,16 @@ Hand-written rather than generated from the OpenAPI spec — evaluated and
 decided against for now, see the roadmap in this ecosystem's planning
 docs for why. Audit log endpoints aren't modeled yet.
 
+## Fluxer version
+
+Verified against Fluxer's REST API version `1.0.0` (the OpenAPI spec's
+own `info.version` field, at `api.fluxer.app/openapi.json`), checked
+against a self-hosted instance running image tag `v1` as of 2026-08-12.
+Fluxer doesn't publish a versioning policy or changelog beyond that
+`info.version` field, so nothing here is guaranteed to track future
+platform changes automatically — re-check the live OpenAPI spec before
+relying on identical behavior after Fluxer updates.
+
 ## Part of the fluxer_dart ecosystem
 
 | Package | Purpose |
