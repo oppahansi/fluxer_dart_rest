@@ -3,6 +3,8 @@
 /// over fluxer_dart_core models.
 library;
 
+export 'src/attachment_rest_manager.dart';
+export 'src/attachment_uploader.dart';
 export 'src/channel_create_builder.dart';
 export 'src/channel_rest_manager.dart';
 export 'src/channel_update_builder.dart';
@@ -15,6 +17,7 @@ export 'src/guild_rest_manager.dart';
 export 'src/guild_role_rest_manager.dart';
 export 'src/guild_sticker_rest_manager.dart';
 export 'src/http_transport.dart';
+export 'src/instance_rest_manager.dart';
 export 'src/invite_rest_manager.dart';
 export 'src/message_builder.dart';
 export 'src/message_rest_manager.dart';

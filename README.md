@@ -3,9 +3,24 @@
 REST client for the [fluxer_dart](https://github.com/oppahansi/fluxer_dart) ecosystem.
 
 Endpoint paths, the `Authorization: Bot <token>` header, and the
-`X-RateLimit-*` response header names were all verified against Fluxer's
-own OpenAPI spec (`api.fluxer.app/openapi.json`) and reference client
-source, since Fluxer's prose REST docs are still unwritten placeholders.
+`X-RateLimit-*` response header names follow
+[Fluxer's HTTP API reference](https://docs.fluxer.app/http-api/),
+cross-checked against the deployment's own OpenAPI document
+(`/v1/openapi.json`), which is served unauthenticated and is the
+authoritative source where the two disagree.
+
+They do disagree. The reference's messages page documents pin listing as
+`GET /channels/{id}/pins` returning an array of messages; the route the
+spec declares, and the one the server actually answers, is
+`GET /channels/{id}/messages/pins` returning a `{items, has_more}`
+envelope whose entries pair each message with its `pinned_at` time. Both
+are modelled here from the spec. Treat the prose reference as the better
+explanation of *why* a route behaves as it does, and the spec as the
+description of *what* it accepts and returns.
+
+Requests go to the versioned mount: every route is also reachable at the
+origin root, but `/v1` is the form clients are expected to use, and
+`RestClient` adds it.
 
 ## Design
 

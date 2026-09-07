@@ -31,7 +31,7 @@ void main() {
     final captured =
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
-    expect(captured.path, '/guilds/1/stickers');
+    expect(captured.path, '/v1/guilds/1/stickers');
   });
 
   test(
@@ -62,7 +62,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'POST');
-      expect(captured.path, '/guilds/1/stickers');
+      expect(captured.path, '/v1/guilds/1/stickers');
       expect(captured.body, {
         'name': 'wave',
         'image': 'data:image/png;base64,AAAA',
@@ -91,7 +91,7 @@ void main() {
     final captured =
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
-    expect(captured.path, '/guilds/1/stickers/clone');
+    expect(captured.path, '/v1/guilds/1/stickers/clone');
     expect(captured.body, {'source_sticker_id': '9'});
   });
 
@@ -111,6 +111,6 @@ void main() {
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
     expect(captured.method, 'DELETE');
-    expect(captured.path, '/guilds/1/stickers/9');
+    expect(captured.path, '/v1/guilds/1/stickers/9');
   });
 }

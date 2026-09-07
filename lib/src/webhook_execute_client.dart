@@ -6,26 +6,30 @@ import 'http_transport.dart';
 import 'package_http_transport.dart';
 import 'rest_client.dart';
 
-/// Sends messages through a webhook's token, per `POST
-/// /webhooks/{id}/{token}` — confirmed against the live OpenAPI spec to
-/// carry no `security` requirement at all, unlike every other route this
-/// ecosystem talks to. Deliberately a separate class from [RestClient]
-/// rather than an optional-token mode on it: [RestClient] always sends
-/// `Authorization: Bot <token>`, and threading a "sometimes omit this
-/// header" flag through it would make the common case (bot auth) harder
-/// to read for the sake of this one different auth story.
+/// Sends messages through `POST /webhooks/{id}/{token}`.
 ///
-/// Scoped to `content`/`embeds`/`username`/`avatarUrl` — the fields most
-/// bots actually override — not the full `WebhookMessageRequest` schema
-/// (attachments, allowed_mentions, stickers, etc. are out of scope, same
-/// reasoning as [MessageBuilder]'s own scope cuts).
+/// Separate from [RestClient] because the route authenticates with the
+/// webhook token in its own path and carries no security requirement:
+/// [RestClient] always sends `Authorization: Bot <token>`, which this
+/// request must not include.
+///
+/// Covers `content`, `embeds`, `username` and `avatarUrl`. The route also
+/// accepts attachments, allowed mentions and stickers, which are not
+/// modelled here.
 final class WebhookExecuteClient {
-  WebhookExecuteClient({HttpTransport? transport, Uri? baseUrl})
-    : _transport =
-          transport ??
-          PackageHttpTransport(baseUrl: baseUrl ?? defaultFluxerApiBaseUrl);
+  WebhookExecuteClient({
+    HttpTransport? transport,
+    Uri? baseUrl,
+    this.apiVersion = defaultFluxerApiVersion,
+  }) : _transport =
+           transport ??
+           PackageHttpTransport(baseUrl: baseUrl ?? defaultFluxerApiBaseUrl);
 
   final HttpTransport _transport;
+
+  /// Path segment prepended to the request path, matching
+  /// [RestClient.apiVersion].
+  final String apiVersion;
 
   Future<void> execute(
     Snowflake webhookId,
@@ -45,7 +49,7 @@ final class WebhookExecuteClient {
     final response = await _transport.send(
       HttpTransportRequest(
         method: 'POST',
-        path: '/webhooks/$webhookId/$token',
+        path: '/$apiVersion/webhooks/$webhookId/$token',
         body: body,
         headers: const {'Content-Type': 'application/json'},
       ),

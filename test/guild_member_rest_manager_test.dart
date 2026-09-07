@@ -45,7 +45,7 @@ void main() {
         final captured =
             verify(() => transport.send(captureAny())).captured.single
                 as HttpTransportRequest;
-        expect(captured.path, '/guilds/1/members?limit=100');
+        expect(captured.path, '/v1/guilds/1/members?limit=100');
       },
     );
 
@@ -67,7 +67,7 @@ void main() {
       final captured =
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
-      expect(captured.path, '/guilds/1/members?limit=5&after=9');
+      expect(captured.path, '/v1/guilds/1/members?limit=5&after=9');
     });
 
     test('get fetches a single member', () async {
@@ -88,7 +88,7 @@ void main() {
       final captured =
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
-      expect(captured.path, '/guilds/1/members/3');
+      expect(captured.path, '/v1/guilds/1/members/3');
     });
 
     test('kick sends a DELETE to the member route', () async {
@@ -103,7 +103,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'DELETE');
-      expect(captured.path, '/guilds/1/members/3');
+      expect(captured.path, '/v1/guilds/1/members/3');
     });
 
     test('timeout PATCHes communication_disabled_until', () async {
@@ -127,7 +127,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'PATCH');
-      expect(captured.path, '/guilds/1/members/3');
+      expect(captured.path, '/v1/guilds/1/members/3');
       expect(captured.body, {
         'communication_disabled_until': until.toIso8601String(),
         'timeout_reason': 'spamming',
@@ -171,7 +171,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'PUT');
-      expect(captured.path, '/guilds/1/members/3/roles/9');
+      expect(captured.path, '/v1/guilds/1/members/3/roles/9');
     });
 
     test('removeRole DELETEs the member role route', () async {
@@ -190,7 +190,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'DELETE');
-      expect(captured.path, '/guilds/1/members/3/roles/9');
+      expect(captured.path, '/v1/guilds/1/members/3/roles/9');
     });
   });
 }

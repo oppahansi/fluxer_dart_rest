@@ -57,7 +57,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'PUT');
-      expect(captured.path, '/guilds/1/bans/3');
+      expect(captured.path, '/v1/guilds/1/bans/3');
       expect(captured.body, {'reason': 'spam'});
     });
 
@@ -87,7 +87,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'DELETE');
-      expect(captured.path, '/guilds/1/bans/3');
+      expect(captured.path, '/v1/guilds/1/bans/3');
     });
   });
 }

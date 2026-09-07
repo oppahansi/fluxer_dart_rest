@@ -43,10 +43,15 @@ final class GuildMemberRestManager {
     return GuildMember.fromJson(json!);
   }
 
-  Future<void> kick(Snowflake guildId, Snowflake userId) => _client.requestJson(
+  Future<void> kick(
+    Snowflake guildId,
+    Snowflake userId, {
+    String? auditLogReason,
+  }) => _client.requestJson(
     method: 'DELETE',
     path: '/guilds/$guildId/members/$userId',
     bucketKey: 'DELETE /guilds/:id/members/:id',
+    auditLogReason: auditLogReason,
   );
 
   /// Times a member out until [until], or clears an existing timeout when

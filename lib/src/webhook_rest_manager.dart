@@ -47,4 +47,23 @@ final class WebhookRestManager {
     path: '/webhooks/$webhookId',
     bucketKey: 'DELETE /webhooks/:id',
   );
+
+  /// Updates a webhook's name, avatar, or channel.
+  ///
+  /// [changes] holds raw request fields; omitting one leaves it
+  /// unchanged.
+  Future<Webhook> update(
+    Snowflake webhookId,
+    Map<String, dynamic> changes, {
+    String? auditLogReason,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'PATCH',
+      path: '/webhooks/$webhookId',
+      bucketKey: 'PATCH /webhooks/:id',
+      body: changes,
+      auditLogReason: auditLogReason,
+    );
+    return Webhook.fromJson(json!);
+  }
 }

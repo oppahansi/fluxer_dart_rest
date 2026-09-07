@@ -30,7 +30,7 @@ void main() {
     final captured =
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
-    expect(captured.path, '/guilds/1');
+    expect(captured.path, '/v1/guilds/1');
     expect(captured.method, 'GET');
   });
 
@@ -61,7 +61,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'POST');
-      expect(captured.path, '/guilds/1/channels');
+      expect(captured.path, '/v1/guilds/1/channels');
       expect(captured.body, {
         'name': 'general',
         'type': ChannelType.guildText.value,
@@ -97,7 +97,7 @@ void main() {
       final captured =
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
-      expect(captured.path, '/guilds/1/audit-logs?limit=5');
+      expect(captured.path, '/v1/guilds/1/audit-logs?limit=5');
     },
   );
 }

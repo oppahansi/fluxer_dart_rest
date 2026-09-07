@@ -30,7 +30,7 @@ void main() {
     final captured =
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
-    expect(captured.path, '/guilds/1/emojis');
+    expect(captured.path, '/v1/guilds/1/emojis');
   });
 
   test('GuildEmojiRestManager.create posts name/image', () async {
@@ -57,7 +57,7 @@ void main() {
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
     expect(captured.method, 'POST');
-    expect(captured.path, '/guilds/1/emojis');
+    expect(captured.path, '/v1/guilds/1/emojis');
     expect(captured.body, {
       'name': 'blob',
       'image': 'data:image/png;base64,AAAA',
@@ -82,7 +82,7 @@ void main() {
     final captured =
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
-    expect(captured.path, '/guilds/1/emojis/clone');
+    expect(captured.path, '/v1/guilds/1/emojis/clone');
     expect(captured.body, {'source_emoji_id': '9'});
   });
 
@@ -102,6 +102,6 @@ void main() {
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
     expect(captured.method, 'DELETE');
-    expect(captured.path, '/guilds/1/emojis/9');
+    expect(captured.path, '/v1/guilds/1/emojis/9');
   });
 }

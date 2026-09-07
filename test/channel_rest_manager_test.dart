@@ -32,7 +32,7 @@ void main() {
     final captured =
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
-    expect(captured.path, '/channels/1');
+    expect(captured.path, '/v1/channels/1');
   });
 
   test('ChannelRestManager.update PATCHes the built payload', () async {
@@ -60,7 +60,7 @@ void main() {
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
     expect(captured.method, 'PATCH');
-    expect(captured.path, '/channels/1');
+    expect(captured.path, '/v1/channels/1');
     expect(captured.body, {
       'type': ChannelType.guildText.value,
       'name': 'renamed',
@@ -83,7 +83,7 @@ void main() {
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
     expect(captured.method, 'DELETE');
-    expect(captured.path, '/channels/1');
+    expect(captured.path, '/v1/channels/1');
   });
 
   test(
@@ -112,7 +112,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'PUT');
-      expect(captured.path, '/channels/1/permissions/9');
+      expect(captured.path, '/v1/channels/1/permissions/9');
       expect(captured.body, {'type': 0, 'allow': '0', 'deny': '0'});
     },
   );
@@ -136,6 +136,6 @@ void main() {
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
     expect(captured.method, 'DELETE');
-    expect(captured.path, '/channels/1/permissions/9');
+    expect(captured.path, '/v1/channels/1/permissions/9');
   });
 }

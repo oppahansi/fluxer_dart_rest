@@ -41,7 +41,7 @@ void main() {
             verify(() => transport.send(captureAny())).captured.single
                 as HttpTransportRequest;
         expect(captured.method, 'POST');
-        expect(captured.path, '/webhooks/1/secret');
+        expect(captured.path, '/v1/webhooks/1/secret');
         expect(captured.body, {'content': 'hi', 'username': 'Announcer'});
         expect(captured.headers.containsKey('Authorization'), isFalse);
       },

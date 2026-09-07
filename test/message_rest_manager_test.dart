@@ -35,7 +35,7 @@ void main() {
     final captured =
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
-    expect(captured.path, '/channels/2/messages?limit=10');
+    expect(captured.path, '/v1/channels/2/messages?limit=10');
   });
 
   test(
@@ -68,7 +68,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'POST');
-      expect(captured.path, '/channels/2/messages');
+      expect(captured.path, '/v1/channels/2/messages');
       expect(captured.body, {'content': 'pong'});
     },
   );
@@ -104,7 +104,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'PATCH');
-      expect(captured.path, '/channels/2/messages/1');
+      expect(captured.path, '/v1/channels/2/messages/1');
       expect(captured.body, {'content': 'page 2/3'});
     },
   );
@@ -134,7 +134,7 @@ void main() {
       expect(captured.method, 'DELETE');
       expect(
         captured.path,
-        '/channels/2/messages/5/reactions/${Uri.encodeComponent('👍')}/9',
+        '/v1/channels/2/messages/5/reactions/${Uri.encodeComponent('👍')}/9',
       );
     },
   );
@@ -155,7 +155,7 @@ void main() {
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
     expect(captured.method, 'DELETE');
-    expect(captured.path, '/channels/2/messages/5');
+    expect(captured.path, '/v1/channels/2/messages/5');
   });
 
   test('MessageRestManager.bulkDelete posts the message id list', () async {
@@ -177,7 +177,7 @@ void main() {
         verify(() => transport.send(captureAny())).captured.single
             as HttpTransportRequest;
     expect(captured.method, 'POST');
-    expect(captured.path, '/channels/2/messages/bulk-delete');
+    expect(captured.path, '/v1/channels/2/messages/bulk-delete');
     expect(captured.body, {
       'message_ids': ['5', '6'],
     });
@@ -207,7 +207,7 @@ void main() {
       expect(captured.method, 'PUT');
       expect(
         captured.path,
-        '/channels/2/messages/5/reactions/${Uri.encodeComponent('👍')}/@me',
+        '/v1/channels/2/messages/5/reactions/${Uri.encodeComponent('👍')}/@me',
       );
     },
   );

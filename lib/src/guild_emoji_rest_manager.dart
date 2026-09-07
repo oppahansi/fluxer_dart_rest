@@ -54,4 +54,24 @@ final class GuildEmojiRestManager {
         path: '/guilds/$guildId/emojis/$emojiId',
         bucketKey: 'DELETE /guilds/:id/emojis/:id',
       );
+
+  /// Renames an emoji.
+  ///
+  /// Requires `createExpressions` for an emoji the bot created, and
+  /// `manageExpressions` for one created by anyone else.
+  Future<GuildEmoji> update(
+    Snowflake guildId,
+    Snowflake emojiId, {
+    required String name,
+    String? auditLogReason,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'PATCH',
+      path: '/guilds/$guildId/emojis/$emojiId',
+      bucketKey: 'PATCH /guilds/:id/emojis/:id',
+      body: {'name': name},
+      auditLogReason: auditLogReason,
+    );
+    return GuildEmoji.fromJson(json!);
+  }
 }

@@ -63,7 +63,7 @@ void main() {
             verify(() => transport.send(captureAny())).captured.single
                 as HttpTransportRequest;
         expect(captured.method, 'POST');
-        expect(captured.path, '/guilds/1/roles');
+        expect(captured.path, '/v1/guilds/1/roles');
         expect(captured.body, {
           'name': 'Moderator',
           'color': 0,
@@ -84,7 +84,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'DELETE');
-      expect(captured.path, '/guilds/1/roles/2');
+      expect(captured.path, '/v1/guilds/1/roles/2');
     });
   });
 }

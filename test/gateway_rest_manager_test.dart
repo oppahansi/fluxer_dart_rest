@@ -32,7 +32,7 @@ void main() {
       final captured =
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
-      expect(captured.path, '/gateway/bot');
+      expect(captured.path, '/v1/gateway/bot');
     },
   );
 }

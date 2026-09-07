@@ -57,10 +57,14 @@ final class GuildStickerRestManager {
     return GuildSticker.fromJson(json!);
   }
 
-  Future<void> delete(Snowflake guildId, Snowflake stickerId) =>
-      _client.requestJson(
-        method: 'DELETE',
-        path: '/guilds/$guildId/stickers/$stickerId',
-        bucketKey: 'DELETE /guilds/:id/stickers/:id',
-      );
+  Future<void> delete(
+    Snowflake guildId,
+    Snowflake stickerId, {
+    String? auditLogReason,
+  }) => _client.requestJson(
+    method: 'DELETE',
+    path: '/guilds/$guildId/stickers/$stickerId',
+    bucketKey: 'DELETE /guilds/:id/stickers/:id',
+    auditLogReason: auditLogReason,
+  );
 }

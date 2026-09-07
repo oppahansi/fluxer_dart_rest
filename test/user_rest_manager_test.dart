@@ -37,7 +37,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'POST');
-      expect(captured.path, '/users/@me/channels');
+      expect(captured.path, '/v1/users/@me/channels');
       expect(captured.body, {'recipient_id': '9'});
     });
   });

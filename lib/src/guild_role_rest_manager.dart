@@ -39,10 +39,14 @@ final class GuildRoleRestManager {
     return GuildRole.fromJson(json!);
   }
 
-  Future<void> delete(Snowflake guildId, Snowflake roleId) =>
-      _client.requestJson(
-        method: 'DELETE',
-        path: '/guilds/$guildId/roles/$roleId',
-        bucketKey: 'DELETE /guilds/:id/roles/:id',
-      );
+  Future<void> delete(
+    Snowflake guildId,
+    Snowflake roleId, {
+    String? auditLogReason,
+  }) => _client.requestJson(
+    method: 'DELETE',
+    path: '/guilds/$guildId/roles/$roleId',
+    bucketKey: 'DELETE /guilds/:id/roles/:id',
+    auditLogReason: auditLogReason,
+  );
 }

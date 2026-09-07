@@ -54,7 +54,7 @@ void main() {
       final captured =
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
-      expect(captured.path, '/invites/abc123');
+      expect(captured.path, '/v1/invites/abc123');
     });
 
     test(
@@ -74,7 +74,7 @@ void main() {
             verify(() => transport.send(captureAny())).captured.single
                 as HttpTransportRequest;
         expect(captured.method, 'POST');
-        expect(captured.path, '/channels/2/invites');
+        expect(captured.path, '/v1/channels/2/invites');
         expect(captured.body, {'max_uses': 5});
       },
     );
@@ -91,7 +91,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'DELETE');
-      expect(captured.path, '/invites/abc123');
+      expect(captured.path, '/v1/invites/abc123');
     });
   });
 }

@@ -7,9 +7,18 @@ import 'http_transport.dart';
 import 'package_http_transport.dart';
 import 'rate_limit_bucket_manager.dart';
 
-/// Fluxer's production API base URL, as verified in the OpenAPI spec's
-/// `servers` entry.
+/// Origin of Fluxer's hosted public API.
+///
+/// A self-hosted deployment publishes its own origin as
+/// `endpoints.api_public` in its instance discovery document. The origin
+/// carries no version segment; [RestClient] adds one per request.
 final Uri defaultFluxerApiBaseUrl = Uri.parse('https://api.fluxer.app');
+
+/// The only API version Fluxer currently serves.
+///
+/// Every route is also mounted at the origin root, but the versioned form
+/// is the one clients are required to use.
+const String defaultFluxerApiVersion = 'v1';
 
 /// Low-level REST client: sends a request through [HttpTransport],
 /// respects known rate-limit buckets, retries `429`/`5xx` responses, and
@@ -22,6 +31,7 @@ final class RestClient {
     Uri? baseUrl,
     Logger? logger,
     RetryPolicy? retryPolicy,
+    this.apiVersion = defaultFluxerApiVersion,
   }) : transport =
            transport ??
            PackageHttpTransport(baseUrl: baseUrl ?? defaultFluxerApiBaseUrl),
@@ -31,6 +41,11 @@ final class RestClient {
 
   final String token;
   final HttpTransport transport;
+
+  /// Path segment prepended to every request path, so managers can name
+  /// routes the way the API reference does (`/users/@me`) while the
+  /// request goes to the versioned mount (`/v1/users/@me`).
+  final String apiVersion;
   final Logger logger;
   final RetryPolicy retryPolicy;
 
@@ -53,6 +68,7 @@ final class RestClient {
     required String path,
     String? bucketKey,
     Object? body,
+    String? auditLogReason,
   }) async {
     final key = bucketKey ?? '$method $path';
     var attempt = 0;
@@ -70,11 +86,13 @@ final class RestClient {
       final response = await transport.send(
         HttpTransportRequest(
           method: method,
-          path: path,
+          path: '/$apiVersion$path',
           body: body,
           headers: {
             'Authorization': 'Bot $token',
             'Content-Type': 'application/json',
+            if (auditLogReason != null)
+              'X-Audit-Log-Reason': _encodeAuditLogReason(auditLogReason),
           },
         ),
       );
@@ -120,6 +138,11 @@ final class RestClient {
       return _tryDecode(response.body);
     }
   }
+
+  /// Header values must be Latin-1; a reason may contain any Unicode. RFC
+  /// 8187 percent-encoding is what the API expects for the wider range.
+  static String _encodeAuditLogReason(String reason) =>
+      Uri.encodeComponent(reason);
 
   dynamic _tryDecode(String body) {
     if (body.isEmpty) return null;

@@ -42,7 +42,7 @@ void main() {
       final captured =
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
-      expect(captured.path, '/channels/3/webhooks');
+      expect(captured.path, '/v1/channels/3/webhooks');
     });
 
     test('get fetches a single webhook', () async {
@@ -93,7 +93,7 @@ void main() {
           verify(() => transport.send(captureAny())).captured.single
               as HttpTransportRequest;
       expect(captured.method, 'DELETE');
-      expect(captured.path, '/webhooks/1');
+      expect(captured.path, '/v1/webhooks/1');
     });
   });
 }

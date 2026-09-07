@@ -55,7 +55,7 @@ void main() {
                 as HttpTransportRequest;
         expect(captured.headers['Authorization'], 'Bot test-token');
         expect(captured.method, 'GET');
-        expect(captured.path, '/guilds/1');
+        expect(captured.path, '/v1/guilds/1');
       },
     );
 

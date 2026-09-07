@@ -61,4 +61,37 @@ final class ChannelRestManager {
     path: '/channels/$channelId/permissions/$overwriteId',
     bucketKey: 'DELETE /channels/:id/permissions/:id',
   );
+
+  /// Reads how much longer the caller must wait before sending again in a
+  /// slowmode channel.
+  ///
+  /// Returns zero when nothing is owed, including when the caller holds
+  /// `bypassSlowmode`.
+  Future<Duration> slowmodeWait(Snowflake channelId) async {
+    final json =
+        await _client.requestJson(
+              method: 'GET',
+              path: '/channels/$channelId/slowmode',
+              bucketKey: 'GET /channels/:id/slowmode',
+            )
+            as Map<String, dynamic>;
+    final seconds = json['wait_seconds'] ?? json['remaining'] ?? 0;
+    return Duration(milliseconds: ((seconds as num) * 1000).round());
+  }
+
+  /// Adds a user to a group DM.
+  Future<void> addRecipient(Snowflake channelId, Snowflake userId) =>
+      _client.requestJson(
+        method: 'PUT',
+        path: '/channels/$channelId/recipients/$userId',
+        bucketKey: 'PUT /channels/:id/recipients/:id',
+      );
+
+  /// Removes a user from a group DM.
+  Future<void> removeRecipient(Snowflake channelId, Snowflake userId) =>
+      _client.requestJson(
+        method: 'DELETE',
+        path: '/channels/$channelId/recipients/$userId',
+        bucketKey: 'DELETE /channels/:id/recipients/:id',
+      );
 }
