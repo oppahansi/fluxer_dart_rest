@@ -80,12 +80,21 @@ final class ChannelRestManager {
   }
 
   /// Adds a user to a group DM.
-  Future<void> addRecipient(Snowflake channelId, Snowflake userId) =>
-      _client.requestJson(
-        method: 'PUT',
-        path: '/channels/$channelId/recipients/$userId',
-        bucketKey: 'PUT /channels/:id/recipients/:id',
-      );
+  ///
+  /// Requires a solved captcha challenge. The API answers an unsolved
+  /// request with `400 CAPTCHA_REQUIRED` and an ALTCHA proof-of-work
+  /// challenge in the error body; solving it is the caller's job, and
+  /// [captchaToken] carries the resulting base64 token.
+  Future<void> addRecipient(
+    Snowflake channelId,
+    Snowflake userId, {
+    String? captchaToken,
+  }) => _client.requestJson(
+    method: 'PUT',
+    path: '/channels/$channelId/recipients/$userId',
+    bucketKey: 'PUT /channels/:id/recipients/:id',
+    captchaToken: captchaToken,
+  );
 
   /// Removes a user from a group DM.
   Future<void> removeRecipient(Snowflake channelId, Snowflake userId) =>
@@ -94,4 +103,37 @@ final class ChannelRestManager {
         path: '/channels/$channelId/recipients/$userId',
         bucketKey: 'DELETE /channels/:id/recipients/:id',
       );
+
+  /// Follows the announcement channel [channelId], delivering copies of
+  /// its published messages into [targetChannelId].
+  ///
+  /// Creates a channel follower webhook in the target channel, named by
+  /// [FollowedChannel.webhookId]; deleting that webhook stops following.
+  /// Requires `viewChannel` on the announcement channel and
+  /// `manageWebhooks` in the target.
+  Future<FollowedChannel> follow(
+    Snowflake channelId, {
+    required Snowflake targetChannelId,
+    String? auditLogReason,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'POST',
+      path: '/channels/$channelId/followers',
+      bucketKey: 'POST /channels/:id/followers',
+      body: {'webhook_channel_id': targetChannelId.toJson()},
+      auditLogReason: auditLogReason,
+    );
+    return FollowedChannel.fromJson(json! as Map<String, dynamic>);
+  }
+
+  /// How many channels and guilds follow the announcement channel
+  /// [channelId].
+  Future<ChannelFollowerStats> followerStats(Snowflake channelId) async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/channels/$channelId/follower-stats',
+      bucketKey: 'GET /channels/:id/follower-stats',
+    );
+    return ChannelFollowerStats.fromJson(json! as Map<String, dynamic>);
+  }
 }

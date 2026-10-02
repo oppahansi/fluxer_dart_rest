@@ -74,4 +74,14 @@ final class GuildEmojiRestManager {
     );
     return GuildEmoji.fromJson(json!);
   }
+
+  /// The guild an emoji belongs to, for an emoji used from another guild.
+  Future<PartialGuild> source(Snowflake emojiId) async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/emojis/$emojiId/source',
+      bucketKey: 'GET /emojis/:id/source',
+    );
+    return PartialGuild.fromJson(json! as Map<String, dynamic>);
+  }
 }

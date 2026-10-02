@@ -253,4 +253,37 @@ final class MessageRestManager {
   static String _query(Map<String, String> params) => params.isEmpty
       ? ''
       : '?${params.entries.map((e) => '${e.key}=${Uri.encodeQueryComponent(e.value)}').join('&')}';
+
+  /// Publishes a message in an announcement channel to every channel
+  /// following it.
+  ///
+  /// Only a [MessageType.default_] message that is not a reply, a forward
+  /// or itself a copy can be published. Requires `sendMessages`, plus
+  /// `manageMessages` to publish someone else's message or a webhook's.
+  /// Rate limited to 10 consecutive publishes per channel, then one every
+  /// six minutes.
+  ///
+  /// Returns the source message with [MessageFlag.crossposted] set.
+  Future<Message> crosspost(Snowflake channelId, Snowflake messageId) async {
+    final json = await _client.requestJson(
+      method: 'POST',
+      path: '/channels/$channelId/messages/$messageId/crosspost',
+      bucketKey: 'POST /channels/:id/messages/:id/crosspost',
+    );
+    return Message.fromJson(json!);
+  }
+
+  /// The guild a copy came from, for a message carrying
+  /// [MessageFlag.isCrosspost].
+  Future<CrosspostSource> crosspostSource(
+    Snowflake channelId,
+    Snowflake messageId,
+  ) async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/channels/$channelId/messages/$messageId/crosspost-source',
+      bucketKey: 'GET /channels/:id/messages/:id/crosspost-source',
+    );
+    return CrosspostSource.fromJson(json! as Map<String, dynamic>);
+  }
 }

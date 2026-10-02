@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 /// [InstanceEndpoints.apiPublic] and connecting the gateway to
 /// [InstanceEndpoints.gateway].
 ///
-/// [RestClient]: package:fluxer_dart_rest/src/rest_httpClient.dart
+/// [RestClient]: package:fluxer_dart_rest/src/rest_client.dart
 final class InstanceRestManager {
   const InstanceRestManager({http.Client? client}) : _httpClient = client;
 

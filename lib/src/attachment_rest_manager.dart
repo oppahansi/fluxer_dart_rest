@@ -151,4 +151,22 @@ final class AttachmentRestManager {
     path: '/channels/$channelId/messages/$messageId/attachments/$attachmentId',
     bucketKey: 'DELETE /channels/:id/messages/:id/attachments/:id',
   );
+
+  /// Re-signs stored attachment URLs so they can be fetched again.
+  ///
+  /// An attachment URL's signature expires, so one kept from an earlier
+  /// message eventually stops working. Takes 1-50 URLs and answers one
+  /// entry per request in the same order; a URL this deployment does not
+  /// serve comes back unchanged.
+  Future<List<RefreshedAttachmentUrl>> refreshUrls(List<String> urls) async {
+    final json = await _client.requestJson(
+      method: 'POST',
+      path: '/attachments/refresh-urls',
+      bucketKey: 'POST /attachments/refresh-urls',
+      body: {'attachment_urls': urls},
+    );
+    return ((json! as Map<String, dynamic>)['refreshed_urls'] as List<dynamic>)
+        .map((u) => RefreshedAttachmentUrl.fromJson(u as Map<String, dynamic>))
+        .toList(growable: false);
+  }
 }

@@ -69,6 +69,7 @@ final class RestClient {
     String? bucketKey,
     Object? body,
     String? auditLogReason,
+    String? captchaToken,
   }) async {
     final key = bucketKey ?? '$method $path';
     var attempt = 0;
@@ -93,6 +94,7 @@ final class RestClient {
             'Content-Type': 'application/json',
             if (auditLogReason != null)
               'X-Audit-Log-Reason': _encodeAuditLogReason(auditLogReason),
+            'X-Captcha-Token': ?captchaToken,
           },
         ),
       );

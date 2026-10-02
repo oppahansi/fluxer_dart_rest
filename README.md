@@ -22,6 +22,14 @@ Requests go to the versioned mount: every route is also reachable at the
 origin root, but `/v1` is the form clients are expected to use, and
 `RestClient` adds it.
 
+Some routes are captcha-gated, including for bot tokens: adding a
+recipient to a group DM, and creating a group DM (a one-to-one DM is not
+gated). The API answers an unsolved request with `400 CAPTCHA_REQUIRED`
+and an ALTCHA proof-of-work challenge in the error body. Solving it is
+the caller's job — this package does not implement a solver — and
+`RestClient.requestJson` carries the resulting token in
+`X-Captcha-Token`.
+
 ## Design
 
 - `HttpTransport` — the only place this package talks to the network

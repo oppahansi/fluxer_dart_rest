@@ -67,4 +67,15 @@ final class GuildStickerRestManager {
     bucketKey: 'DELETE /guilds/:id/stickers/:id',
     auditLogReason: auditLogReason,
   );
+
+  /// The guild a sticker belongs to, for a sticker used from another
+  /// guild.
+  Future<PartialGuild> source(Snowflake stickerId) async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/stickers/$stickerId/source',
+      bucketKey: 'GET /stickers/:id/source',
+    );
+    return PartialGuild.fromJson(json! as Map<String, dynamic>);
+  }
 }

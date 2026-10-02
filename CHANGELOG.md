@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.3.0
+
+- `ChannelRestManager.follow` and `followerStats` — following an
+  announcement channel creates a channel follower webhook in the target
+  channel, named by `FollowedChannel.webhookId`, and deleting that
+  webhook stops following.
+- `MessageRestManager.crosspost` and `crosspostSource` for publishing a
+  message to following channels and reading where a copy came from.
+- `AttachmentRestManager.refreshUrls` re-signs stored attachment URLs,
+  whose signatures expire.
+- `GuildEmojiRestManager.source` and `GuildStickerRestManager.source`
+  name the guild an expression belongs to.
+- `RestClient.requestJson` takes a `captchaToken`, sent as
+  `X-Captcha-Token`. Adding a recipient to a group DM is now captcha
+  gated even for a bot token, so `ChannelRestManager.addRecipient` takes
+  one; solving the ALTCHA proof-of-work challenge is the caller's job.
+- Fixed a broken doc reference on `InstanceRestManager`.
+
 ## 0.2.0
 
 - **Breaking:** requests now go to the versioned mount. `RestClient`
