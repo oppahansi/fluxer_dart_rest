@@ -44,7 +44,8 @@ the caller's job — this package does not implement a solver — and
 - Resource-oriented managers (`GuildRestManager`, `ChannelRestManager`,
   `MessageRestManager`, `GuildMemberRestManager`, `GuildBanRestManager`,
   `GuildEmojiRestManager`, `GuildStickerRestManager`,
-  `GuildRoleRestManager`, `InviteRestManager`, `WebhookRestManager`) mirror
+  `GuildRoleRestManager`, `InviteRestManager`, `WebhookRestManager`,
+  `ThreadRestManager`) mirror
   Fluxer's own OpenAPI grouping — a Repository-pattern layer returning
   typed `fluxer_dart_core` models instead of raw JSON.
 - `MessageBuilder` — Builder pattern for outgoing message payloads.

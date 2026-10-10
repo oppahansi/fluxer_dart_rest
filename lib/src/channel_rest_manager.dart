@@ -136,4 +136,80 @@ final class ChannelRestManager {
     );
     return ChannelFollowerStats.fromJson(json! as Map<String, dynamic>);
   }
+
+  /// Adds a tag to the forum or media channel [channelId] and returns
+  /// the updated channel. Requires `manageChannels`.
+  ///
+  /// Set at most one of [emojiId], a custom emoji of the guild, and
+  /// [emojiName], a single Unicode emoji. A channel holds 20 tags at
+  /// most, with unique names.
+  Future<GuildForumChannel> createTag(
+    Snowflake channelId, {
+    required String name,
+    bool moderated = false,
+    Snowflake? emojiId,
+    String? emojiName,
+    String? auditLogReason,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'POST',
+      path: '/channels/$channelId/tags',
+      bucketKey: 'POST /channels/:id/tags',
+      body: _tagBody(name, moderated, emojiId, emojiName),
+      auditLogReason: auditLogReason,
+    );
+    return Channel.fromJson(json!) as GuildForumChannel;
+  }
+
+  /// Replaces the tag [tagId] and returns the updated channel. Requires
+  /// `manageChannels`.
+  ///
+  /// This is a replacement, not a patch: an omitted [moderated] is
+  /// stored as false and an omitted emoji is cleared.
+  Future<GuildForumChannel> updateTag(
+    Snowflake channelId,
+    Snowflake tagId, {
+    required String name,
+    bool moderated = false,
+    Snowflake? emojiId,
+    String? emojiName,
+    String? auditLogReason,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'PUT',
+      path: '/channels/$channelId/tags/$tagId',
+      bucketKey: 'PUT /channels/:id/tags/:id',
+      body: _tagBody(name, moderated, emojiId, emojiName),
+      auditLogReason: auditLogReason,
+    );
+    return Channel.fromJson(json!) as GuildForumChannel;
+  }
+
+  /// Removes the tag [tagId] and returns the updated channel. Requires
+  /// `manageChannels`.
+  Future<GuildForumChannel> deleteTag(
+    Snowflake channelId,
+    Snowflake tagId, {
+    String? auditLogReason,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'DELETE',
+      path: '/channels/$channelId/tags/$tagId',
+      bucketKey: 'DELETE /channels/:id/tags/:id',
+      auditLogReason: auditLogReason,
+    );
+    return Channel.fromJson(json!) as GuildForumChannel;
+  }
+
+  static Map<String, dynamic> _tagBody(
+    String name,
+    bool moderated,
+    Snowflake? emojiId,
+    String? emojiName,
+  ) => {
+    'name': name,
+    'moderated': moderated,
+    'emoji_id': ?emojiId?.toJson(),
+    'emoji_name': ?emojiName,
+  };
 }

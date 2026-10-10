@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.0
+
+- `ThreadRestManager`: `startFromMessage`, `start`, `createPost` for a
+  forum or media channel, `update` with the new `ThreadUpdateBuilder`,
+  `delete`, `listActive`, the three archive listings, and thread
+  membership (`join`, `leave`, `addMember`, `removeMember`, `getMember`,
+  `listMembers`).
+- `ChannelRestManager.createTag`, `updateTag` and `deleteTag` for forum
+  tags. Each returns the updated forum channel.
+- `ChannelCreateBuilder` creates a forum or media channel when given
+  `ChannelType.guildForum` or `guildMedia`; nothing else changed there.
+- Sending, listing, pinning and reacting in a thread need nothing new:
+  the existing `MessageRestManager` calls take the thread's id as the
+  channel id.
+- Not covered: thread search, forum post data, and `thread_id` on webhook
+  execution.
+
 ## 0.3.0
 
 - `ChannelRestManager.follow` and `followerStats` — following an
