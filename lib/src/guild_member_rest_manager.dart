@@ -1,5 +1,6 @@
 import 'package:fluxer_dart_core/fluxer_dart_core.dart';
 
+import 'current_member_update_builder.dart';
 import 'rest_client.dart';
 
 /// Guild member REST calls, mirroring Fluxer's own
@@ -90,4 +91,30 @@ final class GuildMemberRestManager {
     path: '/guilds/$guildId/members/$userId/roles/$roleId',
     bucketKey: 'DELETE /guilds/:id/members/:id/roles/:id',
   );
+
+  /// This bot's own membership in [guildId].
+  Future<GuildMember> getCurrent(Snowflake guildId) async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/guilds/$guildId/members/@me',
+      bucketKey: 'GET /guilds/:id/members/@me',
+    );
+    return GuildMember.fromJson(json!);
+  }
+
+  /// Changes this bot's own nickname or guild profile in [guildId].
+  Future<GuildMember> updateCurrent(
+    Snowflake guildId,
+    CurrentMemberUpdateBuilder update, {
+    String? auditLogReason,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'PATCH',
+      path: '/guilds/$guildId/members/@me',
+      bucketKey: 'PATCH /guilds/:id/members/@me',
+      body: update.toJson(),
+      auditLogReason: auditLogReason,
+    );
+    return GuildMember.fromJson(json!);
+  }
 }

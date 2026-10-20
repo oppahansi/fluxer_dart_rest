@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.0
+
+- `GuildRestManager.listChannels` and `updateChannelPositions`, with
+  `ChannelPositionUpdate`. The list excludes threads; a reorder is
+  answered by one or more `CHANNEL_UPDATE_BULK` dispatches.
+- `GuildRoleRestManager.update` with `GuildRoleUpdateBuilder`,
+  `updatePositions`, `updateHoistPositions` and `resetHoistPositions`.
+- `GuildMemberRestManager.getCurrent` and `updateCurrent` with
+  `CurrentMemberUpdateBuilder`: this bot's own nickname and guild
+  profile. A setter given `null` sends an explicit `null`, which clears
+  the field.
+
 ## 0.4.0
 
 - `ThreadRestManager`: `startFromMessage`, `start`, `createPost` for a

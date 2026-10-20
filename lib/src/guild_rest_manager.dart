@@ -1,6 +1,7 @@
 import 'package:fluxer_dart_core/fluxer_dart_core.dart';
 
 import 'channel_create_builder.dart';
+import 'position_update.dart';
 import 'rest_client.dart';
 
 /// Guild-resource REST calls, mirroring Fluxer's own `/guilds/*` OpenAPI
@@ -18,6 +19,32 @@ final class GuildRestManager {
     );
     return Guild.fromJson(json!);
   }
+
+  /// Every channel in [guildId] this bot can view, threads excluded.
+  Future<List<Channel>> listChannels(Snowflake guildId) async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/guilds/$guildId/channels',
+      bucketKey: 'GET /guilds/:id/channels',
+    );
+    return (json as List<dynamic>)
+        .map((c) => Channel.fromJson(c as Map<String, dynamic>))
+        .toList(growable: false);
+  }
+
+  /// Moves several channels in one request. Answered by one or more
+  /// `CHANNEL_UPDATE_BULK` dispatches carrying the resulting positions.
+  Future<void> updateChannelPositions(
+    Snowflake guildId,
+    List<ChannelPositionUpdate> positions, {
+    String? auditLogReason,
+  }) => _client.requestJson(
+    method: 'PATCH',
+    path: '/guilds/$guildId/channels',
+    bucketKey: 'PATCH /guilds/:id/channels',
+    body: positions.map((p) => p.toJson()).toList(growable: false),
+    auditLogReason: auditLogReason,
+  );
 
   Future<Channel> createChannel(
     Snowflake guildId,
