@@ -69,6 +69,13 @@ final class GuildRoleRestManager {
 
   /// Reorders roles; a higher position ranks higher. Answered by a
   /// `GUILD_ROLE_UPDATE_BULK` carrying every role that moved.
+  ///
+  /// [positions] are sort keys, not slots. The server reorders only the
+  /// roles this bot can manage — those below its own highest role —
+  /// within the slots they already occupy, then renumbers every role
+  /// contiguously. A role therefore cannot be moved past one it cannot
+  /// manage, and a request that would need to is a silent no-op rather
+  /// than an error; read the roles back to see where they landed.
   Future<void> updatePositions(
     Snowflake guildId,
     Map<Snowflake, int> positions, {
