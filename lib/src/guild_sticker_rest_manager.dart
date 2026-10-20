@@ -22,13 +22,14 @@ final class GuildStickerRestManager {
   }
 
   /// [image] is a data URI (`data:image/png;base64,...`), matching what
-  /// `GuildStickerCreateRequest.image` expects on the wire.
+  /// `GuildStickerCreateRequest.image` expects on the wire. [tags] are
+  /// autocomplete suggestions: at most 10, each 1-30 characters.
   Future<GuildSticker> create(
     Snowflake guildId, {
     required String name,
     required String image,
     String? description,
-    String? tags,
+    List<String> tags = const [],
   }) async {
     final json = await _client.requestJson(
       method: 'POST',
@@ -38,7 +39,7 @@ final class GuildStickerRestManager {
         'name': name,
         'image': image,
         'description': ?description,
-        'tags': ?tags,
+        if (tags.isNotEmpty) 'tags': tags,
       },
     );
     return GuildSticker.fromJson(json!);

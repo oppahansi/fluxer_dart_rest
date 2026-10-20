@@ -11,6 +11,9 @@
   `CurrentMemberUpdateBuilder`: this bot's own nickname and guild
   profile. A setter given `null` sends an explicit `null`, which clears
   the field.
+- Fixed: `GuildStickerRestManager.create` sent `tags` as a string; the
+  API takes an array, so any call passing tags was rejected with a 400.
+  `tags` is now a `List<String>`. **Breaking** for callers passing it.
 
 ## 0.4.0
 

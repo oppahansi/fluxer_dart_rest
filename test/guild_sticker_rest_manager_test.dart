@@ -55,7 +55,7 @@ void main() {
         name: 'wave',
         image: 'data:image/png;base64,AAAA',
         description: 'a wave',
-        tags: 'hi',
+        tags: ['hi'],
       );
 
       final captured =
@@ -67,7 +67,7 @@ void main() {
         'name': 'wave',
         'image': 'data:image/png;base64,AAAA',
         'description': 'a wave',
-        'tags': 'hi',
+        'tags': ['hi'],
       });
     },
   );
