@@ -70,4 +70,48 @@ final class UserRestManager {
     );
     return Channel.fromJson(json!);
   }
+
+  /// [userId]'s profile. Naming a [guildId] adds their member and guild
+  /// profile there; [withMutualGuilds] adds the guilds this bot shares
+  /// with them.
+  Future<UserProfile> profile(
+    Snowflake userId, {
+    Snowflake? guildId,
+    bool withMutualGuilds = false,
+  }) async {
+    final query = [
+      if (guildId != null) 'guild_id=$guildId',
+      if (withMutualGuilds) 'with_mutual_guilds=true',
+    ].join('&');
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/users/$userId/profile${query.isEmpty ? '' : '?$query'}',
+      bucketKey: 'GET /users/:id/profile',
+    );
+    return UserProfile.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// The application this bot belongs to.
+  Future<BotApplication> application() async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/applications/@me',
+      bucketKey: 'GET /applications/@me',
+    );
+    return BotApplication.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// Deletes **every** message this bot has sent in [guildId], in every
+  /// channel, in the background.
+  ///
+  /// The route asks a user for sudo verification; a bot token is not
+  /// asked, so this runs at once with no confirmation and cannot be
+  /// undone.
+  Future<void> deleteAllOwnMessagesInGuild(Snowflake guildId) =>
+      _client.requestJson(
+        method: 'POST',
+        path: '/users/@me/guilds/$guildId/messages/bulk-delete-mine',
+        bucketKey: 'POST /users/@me/guilds/:id/messages/bulk-delete-mine',
+        body: const <String, dynamic>{},
+      );
 }

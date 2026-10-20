@@ -14,6 +14,29 @@
 - Fixed: `GuildStickerRestManager.create` sent `tags` as a string; the
   API takes an array, so any call passing tags was rejected with a 400.
   `tags` is now a `List<String>`. **Breaking** for callers passing it.
+- Error responses' field errors are decoded into
+  `FluxerApiException.fieldErrors`, for `RestClient` and the webhook
+  client.
+- `MessageRestManager.search` with `MessageSearchBuilder`. A search must
+  name a guild or channel; the server rejects one that does not.
+- `ThreadRestManager.search` and `postData`.
+- `DiscoveryRestManager`: categories, search, and a guild's application
+  (status, apply, edit, withdraw).
+- `UserRestManager.profile`, `application`, and
+  `deleteAllOwnMessagesInGuild` — which a bot can call without the sudo
+  confirmation a user needs, so it is immediate and irreversible.
+- `GuildEmojiRestManager.bulkCreate` and `metadata`;
+  `GuildStickerRestManager.update`, `bulkCreate` and `metadata`. An
+  invalid entry rejects a whole bulk request.
+- `GuildRestManager.updateVanityUrl`, `InviteRestManager.listForChannel`.
+- `ChannelCreateBuilder` and `ChannelUpdateBuilder` gained parent
+  category, NSFW, slowmode, bitrate, user limit, permission overwrites,
+  flags and every forum default. Existing calls send the same JSON as
+  before.
+- `WebhookExecuteClient` covers every token route: `executeAndWait`,
+  `threadId`, `threadName` and `appliedTagIds` on execute, `getMessage`,
+  `editMessage`, `deleteMessage`, and `get`, `update` and `delete` of the
+  webhook itself.
 
 ## 0.4.0
 

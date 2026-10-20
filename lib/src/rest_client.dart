@@ -134,6 +134,7 @@ final class RestClient {
           (decoded?['message'] as String?) ?? 'Request to $method $path failed',
           statusCode: response.statusCode,
           errorCode: decoded?['code'] as String?,
+          fieldErrors: FluxerFieldError.listFromJson(decoded?['errors']),
         );
       }
 

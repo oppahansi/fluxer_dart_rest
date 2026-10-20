@@ -296,4 +296,62 @@ final class ThreadRestManager {
         .map((m) => ThreadMember.fromJson(m as Map<String, dynamic>))
         .toList(growable: false);
   }
+
+  /// Searches the threads of [channelId], usually a forum by post title.
+  /// When the index is not ready the result carries
+  /// [ThreadSearchResults.retryAfter] instead of threads.
+  Future<ThreadSearchResults> search(
+    Snowflake channelId, {
+    String? name,
+    List<Snowflake> tagIds = const [],
+    ForumTagSetting? tagSetting,
+    bool? archived,
+    String? sortBy,
+    bool? ascending,
+    int limit = 25,
+    int offset = 0,
+  }) async {
+    final query = [
+      if (name != null) 'name=${Uri.encodeQueryComponent(name)}',
+      for (final tag in tagIds) 'tag=$tag',
+      if (tagSetting != null) 'tag_setting=${tagSetting.value}',
+      if (archived != null) 'archived=$archived',
+      if (sortBy != null) 'sort_by=$sortBy',
+      if (ascending != null) 'sort_order=${ascending ? 'asc' : 'desc'}',
+      'limit=$limit',
+      'offset=$offset',
+    ].join('&');
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/channels/$channelId/threads/search?$query',
+      bucketKey: 'GET /channels/:id/threads/search',
+    );
+    return ThreadSearchResults.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// The owner and first message of up to 100 posts in a forum or media
+  /// channel, keyed by post id. A post that is not in [channelId] is
+  /// missing from the result.
+  Future<Map<Snowflake, ForumPostData>> postData(
+    Snowflake channelId,
+    List<Snowflake> threadIds,
+  ) async {
+    final json = await _client.requestJson(
+      method: 'POST',
+      path: '/channels/$channelId/post-data',
+      bucketKey: 'POST /channels/:id/post-data',
+      body: {
+        'thread_ids': [for (final id in threadIds) id.toJson()],
+      },
+    );
+    final threads =
+        (json as Map<String, dynamic>)['threads'] as Map<String, dynamic>? ??
+        const {};
+    return {
+      for (final MapEntry(:key, :value) in threads.entries)
+        Snowflake.parse(key): ForumPostData.fromJson(
+          value as Map<String, dynamic>,
+        ),
+    };
+  }
 }

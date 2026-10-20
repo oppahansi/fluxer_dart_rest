@@ -152,4 +152,17 @@ final class GuildRestManager {
     );
     return GuildMemberSearchPage.fromJson(json! as Map<String, dynamic>);
   }
+
+  /// Sets the guild's vanity invite code, or removes it with `null`.
+  /// Setting one needs the guild's `VANITY_URL` feature; the API answers
+  /// `VANITY_URL_REQUIRES_FEATURE` otherwise.
+  Future<String?> updateVanityUrl(Snowflake guildId, String? code) async {
+    final json = await _client.requestJson(
+      method: 'PATCH',
+      path: '/guilds/$guildId/vanity-url',
+      bucketKey: 'PATCH /guilds/:id/vanity-url',
+      body: {'code': code},
+    );
+    return (json as Map<String, dynamic>)['code'] as String?;
+  }
 }

@@ -52,4 +52,15 @@ final class InviteRestManager {
     path: '/invites/$code',
     bucketKey: 'DELETE /invites/:code',
   );
+
+  Future<List<Invite>> listForChannel(Snowflake channelId) async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/channels/$channelId/invites',
+      bucketKey: 'GET /channels/:id/invites',
+    );
+    return (json as List<dynamic>)
+        .map((i) => Invite.fromJson(i as Map<String, dynamic>))
+        .toList(growable: false);
+  }
 }

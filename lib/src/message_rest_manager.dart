@@ -1,6 +1,7 @@
 import 'package:fluxer_dart_core/fluxer_dart_core.dart';
 
 import 'message_builder.dart';
+import 'message_search_builder.dart';
 import 'rest_client.dart';
 
 /// Message-resource REST calls, covering the `/channels/{id}/messages`,
@@ -285,5 +286,21 @@ final class MessageRestManager {
       bucketKey: 'GET /channels/:id/messages/:id/crosspost-source',
     );
     return CrosspostSource.fromJson(json! as Map<String, dynamic>);
+  }
+
+  /// Searches messages, newest first unless the builder says otherwise.
+  ///
+  /// Search runs against an index that is filled shortly after a message
+  /// is sent, so a message can be missing for a moment after creation;
+  /// while the index is being built the result has
+  /// [MessageSearchResults.indexing] set.
+  Future<MessageSearchResults> search(MessageSearchBuilder search) async {
+    final json = await _client.requestJson(
+      method: 'POST',
+      path: '/search/messages',
+      bucketKey: 'POST /search/messages',
+      body: search.toJson(),
+    );
+    return MessageSearchResults.fromJson(json as Map<String, dynamic>);
   }
 }

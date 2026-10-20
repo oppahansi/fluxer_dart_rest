@@ -79,4 +79,60 @@ final class GuildStickerRestManager {
     );
     return PartialGuild.fromJson(json! as Map<String, dynamic>);
   }
+
+  /// Renames a sticker and replaces its tags. The API requires [name] on
+  /// every update.
+  Future<GuildSticker> update(
+    Snowflake guildId,
+    Snowflake stickerId, {
+    required String name,
+    List<String>? tags,
+  }) async {
+    final json = await _client.requestJson(
+      method: 'PATCH',
+      path: '/guilds/$guildId/stickers/$stickerId',
+      bucketKey: 'PATCH /guilds/:id/stickers/:id',
+      body: {'name': name, 'tags': ?tags},
+    );
+    return GuildSticker.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// Creates up to 50 stickers. An invalid entry rejects the whole
+  /// request before anything is created.
+  Future<BulkCreateResult<GuildSticker>> bulkCreate(
+    Snowflake guildId,
+    List<({String name, String image, String? description, List<String> tags})>
+    stickers,
+  ) async {
+    final json = await _client.requestJson(
+      method: 'POST',
+      path: '/guilds/$guildId/stickers/bulk',
+      bucketKey: 'POST /guilds/:id/stickers/bulk',
+      body: {
+        'stickers': [
+          for (final s in stickers)
+            {
+              'name': s.name,
+              'image': s.image,
+              'description': ?s.description,
+              if (s.tags.isNotEmpty) 'tags': s.tags,
+            },
+        ],
+      },
+    );
+    return BulkCreateResult.fromJson(
+      json as Map<String, dynamic>,
+      GuildSticker.fromJson,
+    );
+  }
+
+  /// Any sticker's guild and cloning permission, from its id alone.
+  Future<ExpressionMetadata> metadata(Snowflake stickerId) async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/stickers/$stickerId/metadata',
+      bucketKey: 'GET /stickers/:id/metadata',
+    );
+    return ExpressionMetadata.fromJson(json as Map<String, dynamic>);
+  }
 }

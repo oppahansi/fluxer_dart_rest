@@ -84,4 +84,36 @@ final class GuildEmojiRestManager {
     );
     return PartialGuild.fromJson(json! as Map<String, dynamic>);
   }
+
+  /// Creates up to 50 emojis, each a name and a data URI. An invalid
+  /// entry rejects the whole request before anything is created.
+  Future<BulkCreateResult<GuildEmoji>> bulkCreate(
+    Snowflake guildId,
+    List<({String name, String image})> emojis,
+  ) async {
+    final json = await _client.requestJson(
+      method: 'POST',
+      path: '/guilds/$guildId/emojis/bulk',
+      bucketKey: 'POST /guilds/:id/emojis/bulk',
+      body: {
+        'emojis': [
+          for (final e in emojis) {'name': e.name, 'image': e.image},
+        ],
+      },
+    );
+    return BulkCreateResult.fromJson(
+      json as Map<String, dynamic>,
+      GuildEmoji.fromJson,
+    );
+  }
+
+  /// Any emoji's guild and cloning permission, from its id alone.
+  Future<ExpressionMetadata> metadata(Snowflake emojiId) async {
+    final json = await _client.requestJson(
+      method: 'GET',
+      path: '/emojis/$emojiId/metadata',
+      bucketKey: 'GET /emojis/:id/metadata',
+    );
+    return ExpressionMetadata.fromJson(json as Map<String, dynamic>);
+  }
 }
