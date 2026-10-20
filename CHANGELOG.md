@@ -37,6 +37,7 @@
   `threadId`, `threadName` and `appliedTagIds` on execute, `getMessage`,
   `editMessage`, `deleteMessage`, and `get`, `update` and `delete` of the
   webhook itself.
+- Pins `fluxer_dart_core` 0.5.0.
 
 ## 0.4.0
 

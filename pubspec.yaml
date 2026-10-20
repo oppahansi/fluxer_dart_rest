@@ -3,7 +3,7 @@ description: >-
   REST client for Fluxer: an HttpTransport adapter over package:http,
   reactive rate-limit bucket tracking from Fluxer's own X-RateLimit-*
   response headers, and resource-oriented managers over fluxer_dart_core models.
-version: 0.4.0
+version: 0.5.0
 homepage: https://github.com/oppahansi/fluxer_dart_rest
 repository: https://github.com/oppahansi/fluxer_dart_rest
 # Not on pub.dev yet — remove this line once it's actually published there.
@@ -20,7 +20,7 @@ dependencies:
   fluxer_dart_core:
     git:
       url: https://github.com/oppahansi/fluxer_dart_core.git
-      ref: v0.4.0
+      ref: v0.5.0
   fluxer_dart_utils:
     git:
       url: https://github.com/oppahansi/fluxer_dart_utils.git
