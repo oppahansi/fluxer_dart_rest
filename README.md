@@ -1,5 +1,7 @@
 # fluxer_dart_rest
 
+[![Discord](https://img.shields.io/static/v1?logo=discord&label=discord&message=Join&color=blue)](https://discord.gg/ncKmDEArqg)
+
 REST client for the [fluxer_dart](https://github.com/oppahansi/fluxer_dart) ecosystem.
 
 Endpoint paths, the `Authorization: Bot <token>` header, and the
